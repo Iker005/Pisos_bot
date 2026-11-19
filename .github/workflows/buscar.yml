@@ -1,0 +1,62 @@
+name: Buscar pisos
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"     # cada 30 minutos (en el minuto 7 y 37)
+  workflow_dispatch:            # botón "Run workflow" para lanzarlo a mano
+    inputs:
+      modo:
+        description: "nuevos = solo pisos nuevos · semanal = todos + resumen de precios"
+        type: choice
+        options: [nuevos, semanal]
+        default: nuevos
+
+permissions:
+  contents: write               # para guardar la lista de pisos ya enviados
+
+concurrency:
+  group: buscar-pisos           # nunca dos búsquedas a la vez
+  cancel-in-progress: false
+
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      AMIGOS_CHAT_ID: ${{ vars.AMIGOS_CHAT_ID }}
+      MODO: ${{ github.event.inputs.modo == 'semanal' && '--una-vez' || '--nuevos' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Buscar (vosotros)
+        continue-on-error: true
+        run: python bot.py $MODO
+
+      - name: Buscar (amigos)
+        if: ${{ vars.AMIGOS_CHAT_ID != '' }}
+        continue-on-error: true
+        run: python bot.py $MODO --perfil amigos
+
+      - name: Guardar pisos ya enviados
+        if: always()
+        run: |
+          shopt -s nullglob
+          files=(vistos*.json historico*.json)
+          [ ${#files[@]} -eq 0 ] && exit 0
+          git config user.name "bot-pisos"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${files[@]}"
+          git diff --cached --quiet && exit 0
+          git commit -m "Actualizar pisos vistos"
+          git pull --rebase --quiet && git push
