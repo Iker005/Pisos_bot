@@ -46,14 +46,16 @@ EXTRAS = {
 
 # --- Búsquedas ------------------------------------------------
 # Para desactivar una web, pon # delante de su línea.
-# (Idealista y Milanuncios bloquean al bot, por eso no están.)
+# Idealista y Milanuncios bloquean al bot. Fotocasa y Wallapop bloquean a los
+# servidores de GitHub (error 403), así que aquí van desactivadas; desde el
+# Mac sí funcionan.
 BUSQUEDAS = [
-    "https://www.fotocasa.es/es/alquiler/viviendas/vigo/todas-las-zonas/l?maxPrice=800&minSurface=60&sortType=publicationDate",
+    # "https://www.fotocasa.es/es/alquiler/viviendas/vigo/todas-las-zonas/l?maxPrice=800&minSurface=60&sortType=publicationDate",
     "https://www.pisos.com/alquiler-residencial/pisos-vigo/desde-60-m2/hasta-800/",
     "https://www.habitaclia.com/alquiler/viviendas/pontevedra-provincia/vigo/s?maxPrice=800&minSurface=60&minRooms=1",
     # Wallapop con la ubicación de Vigo puesta en la URL (los servidores de
     # GitHub no están en Vigo, así que sin esto buscaría en otra ciudad).
-    "https://es.wallapop.com/search?keywords=pisos+alquiler&latitude=42.2328&longitude=-8.7226&distance_in_km=10&order_by=newest",
+    # "https://es.wallapop.com/search?keywords=pisos+alquiler&latitude=42.2328&longitude=-8.7226&distance_in_km=10&order_by=newest",
 ]
 
 # --- Funcionamiento -------------------------------------------
