@@ -24,6 +24,7 @@ pisos.com:61720461188_106400
 pisos.com:61729459018_106400
 pisos.com:64171558047_109800
 pisos.com:69229627952_510549
+wallapop:cama-y-un-colchon-pikolin-1325975234
 wallapop:cocina-modular-de-2-40-m-nueva-a-estrenar-1314219999
 wallapop:piso-en-alquiler-en-areal-zona-centro-en-vigo-1307038724
 wallapop:piso-en-alquiler-en-cabral-candean-en-vigo-1309024343
@@ -32,6 +33,7 @@ wallapop:piso-en-alquiler-en-cabral-candean-en-vigo-1321004305
 wallapop:piso-en-alquiler-en-casco-vello-en-vigo-1322380605
 wallapop:piso-en-alquiler-en-praza-espana-casablanca-en-vigo-1315153140
 wallapop:piso-en-alquiler-en-praza-espana-casablanca-en-vigo-1317559456
+wallapop:piso-en-alquiler-en-praza-espana-casablanca-en-vigo-1325939429
 wallapop:piso-en-alquiler-en-travesia-de-vigo-san-xoan-en-vigo-1316680666
 wallapop:servicio-de-pintura-profesional-1321349924
 wallapop:vivienda-1300267788
