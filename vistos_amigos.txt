@@ -5,7 +5,14 @@ fotocasa:191294727
 fotocasa:191350908
 fotocasa:191368056
 fotocasa:191415000
+habitaclia:24a0fa39-3108-4aa7-9bc8-92c0ae895d56
+habitaclia:3dcf5b3e-f097-4c31-bde8-8fbbb1edb94d
+habitaclia:60a9f729-a860-4b73-b541-65458ea81ba6
 habitaclia:9f3a1765-fbff-4c29-9fcc-549a097696a1
+habitaclia:c70173cf-4e4c-497e-9f08-e0b73c3a37e5
+habitaclia:cb5b2521-a0b2-44da-beba-9de9ecf79d06
+habitaclia:d8cd647f-34af-4bba-a8c7-a6352aac16aa
+pisos.com:64171558047_109800
 pisos.com:69229627952_510549
 wallapop:piso-en-alquiler-en-cabral-candean-en-vigo-1321004305
 wallapop:servicio-de-pintura-profesional-1321349924
