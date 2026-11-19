@@ -44,7 +44,6 @@ jobs:
         run: python bot.py $MODO
 
       - name: Buscar (amigos)
-        if: ${{ vars.AMIGOS_CHAT_ID != '' }}
         continue-on-error: true
         run: python bot.py $MODO --perfil amigos
 

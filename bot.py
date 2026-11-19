@@ -608,6 +608,11 @@ def main() -> None:
             or "PEGA_AQUI" in str(config.TELEGRAM_CHAT_ID):
         sys.exit("Falta el TOKEN (secreto TELEGRAM_TOKEN en GitHub) o el CHAT_ID en config.py")
 
+    if os.environ.get("CI") and not getattr(config, "BUSCAR_EN_GITHUB", True):
+        log.info("%s: desactivada en GitHub (BUSCAR_EN_GITHUB = False), no se busca.",
+                 getattr(config, "NOMBRE_BUSQUEDA", "Vuestra búsqueda"))
+        return
+
     if "--prueba" in sys.argv:
         r = telegram("sendMessage", {"chat_id": config.TELEGRAM_CHAT_ID,
                      "text": "🤖 ¡Hola! El bot de pisos está conectado al grupo."})

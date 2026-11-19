@@ -10,6 +10,11 @@ from pathlib import Path
 
 EN_GITHUB = bool(os.environ.get("CI"))
 
+# --- Búsqueda automática en GitHub (cada 30 min) ----------------
+# False = GitHub NO busca para vosotros (desde el Mac sí podéis lanzarla a mano).
+# Cuando volváis a buscar piso, cambiadlo a True.
+BUSCAR_EN_GITHUB = False
+
 # --- Telegram -------------------------------------------------
 _token_txt = Path(__file__).with_name("token.txt")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN") or (

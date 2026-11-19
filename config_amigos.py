@@ -11,12 +11,15 @@ from config import *  # noqa: F401,F403
 
 NOMBRE_BUSQUEDA = "Búsqueda amigos (2-3 hab)"
 
+# GitHub busca para ellos cada 30 minutos (False para pararlo)
+BUSCAR_EN_GITHUB = True
+
 HABITACIONES_MINIMAS = 2
 HABITACIONES_MAXIMAS = 3
 
 # Grupo de Telegram de los amigos: en GitHub se pone como variable
 # AMIGOS_CHAT_ID (Settings → Secrets and variables → Actions → Variables).
-# Mientras no exista, la búsqueda de los amigos no se lanza.
+# Mientras no exista, sus pisos llegan a vuestro grupo.
 TELEGRAM_CHAT_ID = os.environ.get("AMIGOS_CHAT_ID") or TELEGRAM_CHAT_ID  # noqa: F405
 
 # Ejemplos de otros ajustes que puedes cambiar solo para ellos
