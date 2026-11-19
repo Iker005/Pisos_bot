@@ -335,6 +335,12 @@ def revisar_busqueda(pagina, url: str) -> list[dict]:
             log.warning("%s: parece que pide captcha o nos ha bloqueado", NOMBRES_WEB[web])
         else:
             log.warning("%s: no he encontrado anuncios (revisa la URL)", NOMBRES_WEB[web])
+        try:  # pista de qué página está viendo (útil en GitHub, donde no se ve)
+            texto = re.sub(r"\s+", " ", pagina.inner_text("body"))[:400]
+            log.warning("   título: %s | url final: %s", pagina.title(), pagina.url)
+            log.warning("   texto: %s", texto)
+        except Exception:
+            pass
     else:
         log.info("%s: %d anuncios en la página", NOMBRES_WEB[web], len(anuncios))
     return anuncios
