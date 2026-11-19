@@ -69,6 +69,8 @@ if not EN_GITHUB:
 
 # --- Funcionamiento -------------------------------------------
 INTERVALO_MINUTOS = 30
-OCULTAR_NAVEGADOR = True
+# En el Mac el navegador se abre a la vista: Fotocasa y Wallapop bloquean el
+# navegador oculto. En GitHub siempre va oculto (no hay pantalla).
+OCULTAR_NAVEGADOR = EN_GITHUB
 MAX_ENVIOS_POR_VUELTA = 15
 MAX_ENVIOS_SEMANAL = 40
