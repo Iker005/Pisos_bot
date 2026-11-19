@@ -413,6 +413,9 @@ def resumen_semanal(pisos: list) -> str:
         else:
             lineas.append(f"{nombre}: ninguno esta semana")
 
+    if leidos_por_web:
+        lineas.append(f"🌐 {_estado_webs()}")
+
     historico.append({"fecha": time.strftime("%Y-%m-%d"), "pisos": len(pisos),
                       "media": media, "m2": m2})
     try:
@@ -451,6 +454,69 @@ def diagnostico() -> None:
             print()
         nav.close()
     print("Se han guardado los archivos debug_*.html en la carpeta.")
+
+
+def mensaje_html(texto: str) -> bool:
+    """Envía un mensaje con formato; si Telegram lo rechaza, lo manda sin formato."""
+    r = telegram("sendMessage", {"chat_id": config.TELEGRAM_CHAT_ID,
+                                 "parse_mode": "HTML", "text": texto})
+    if not r.get("ok"):
+        log.warning("Telegram rechazó el mensaje: %s", r)
+        r = telegram("sendMessage", {"chat_id": config.TELEGRAM_CHAT_ID,
+                                     "text": re.sub(r"<[^>]+>", "", texto)})
+    return bool(r.get("ok"))
+
+
+def _desde() -> str:
+    return "GitHub" if os.environ.get("CI") else "Mac"
+
+
+def _hora() -> str:
+    # GitHub funciona en hora UTC: la pasamos a la de España
+    try:
+        from zoneinfo import ZoneInfo
+        from datetime import datetime
+        return datetime.now(ZoneInfo("Europe/Madrid")).strftime("%d/%m %H:%M")
+    except Exception:
+        return time.strftime("%d/%m %H:%M")
+
+
+def separador() -> str:
+    """Mensaje 'en blanco' que separa una búsqueda de la anterior."""
+    blanco = "\u2800\n" * getattr(config, "LINEAS_SEPARADOR", 10)
+    titulo = getattr(config, "NOMBRE_BUSQUEDA", "Nueva búsqueda")
+    modo = "semanal" if "--una-vez" in sys.argv else "nuevos"
+    return (f"{blanco}━━━━━━━━━━━━━━━━━━\n"
+            f"🔎 <b>{titulo}</b> · {_hora()}\n"
+            f"<i>({modo}, desde el {_desde()})</i>")
+
+
+def _estado_webs() -> str:
+    return " · ".join(f"{NOMBRE_WEB_O(w)} {'✅' if n else '❌'}"
+                      for w, n in leidos_por_web.items())
+
+
+def resumen_busqueda(pisos: list) -> str:
+    """Resumen corto al final de una búsqueda de pisos nuevos."""
+    lineas = [f"📋 <b>Fin de la búsqueda</b> · {_hora()}",
+              f"🆕 {len(pisos)} piso{'s' if len(pisos) != 1 else ''} "
+              f"nuevo{'s' if len(pisos) != 1 else ''}"]
+    precios = [a["precio"] for a in pisos if a["precio"]]
+    if precios:
+        media = round(sum(precios) / len(precios))
+        rango = f" ({min(precios)}–{max(precios)} €)" if len(precios) > 1 else ""
+        lineas.append(f"💶 Precio medio: <b>{media} €</b>{rango}")
+    ideal = getattr(config, "PRECIO_IDEAL", 700)
+    dentro = sum(1 for p in precios if p <= ideal)
+    if precios:
+        lineas.append(f"✅ {dentro} dentro de {ideal} €")
+    pref = sum(1 for a in pisos if a["preferida"])
+    if pref:
+        zonas = "/".join(z.title() for z in config.ZONAS_PREFERIDAS)
+        lineas.append(f"⭐ {pref} en {zonas}")
+    if leidos_por_web:
+        lineas.append(f"🌐 {_estado_webs()}")
+    return "\n".join(lineas)
 
 
 def vuelta() -> None:
@@ -497,28 +563,34 @@ def vuelta() -> None:
 
     if semanal:
         validos.sort(key=lambda a: (not a["nuevo"], not a["preferida"]))
-        resumen = resumen_semanal(validos)
         limite = getattr(config, "MAX_ENVIOS_SEMANAL", 40)
     else:
+        validos.sort(key=lambda a: not a["preferida"])
         limite = config.MAX_ENVIOS_POR_VUELTA
+    a_enviar = validos[:limite]
 
-    enviados = 0
-    for a in validos[:limite]:
+    # Sin pisos que mandar (búsqueda normal) -> no se manda nada al grupo.
+    if not a_enviar and not semanal:
+        guardar_vistos(vistos)
+        log.info("Vuelta terminada: 0 anuncios enviados (no se manda nada al grupo)")
+        return
+
+    mensaje_html(separador())
+    time.sleep(1.5)
+
+    enviados = []
+    for a in a_enviar:
         if enviar(a, marcar=semanal):
             vistos.add(a["clave"])
-            enviados += 1
+            enviados.append(a)
             time.sleep(1.5)
     guardar_vistos(vistos)
 
-    if semanal:  # el resumen va al final, para que sea lo último que se vea
-        time.sleep(1.5)
-        r = telegram("sendMessage", {"chat_id": config.TELEGRAM_CHAT_ID,
-                                     "parse_mode": "HTML", "text": resumen})
-        if not r.get("ok"):
-            log.warning("Telegram rechazó el resumen: %s", r)
-            r = telegram("sendMessage", {"chat_id": config.TELEGRAM_CHAT_ID,
-                                         "text": re.sub(r"<[^>]+>", "", resumen)})
-        log.info("Resumen semanal %s", "enviado ✅" if r.get("ok") else f"NO enviado: {r}")
+    # El resumen va al final, para que sea lo último que se vea
+    resumen = resumen_semanal(validos) if semanal else resumen_busqueda(enviados)
+    ok = mensaje_html(resumen)
+    log.info("Resumen %s", "enviado ✅" if ok else "NO enviado")
+    enviados = len(enviados)
     log.info("Vuelta terminada: %d anuncios enviados", enviados)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         try:
