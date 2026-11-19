@@ -2,3 +2,4 @@ __pycache__/
 perfil_navegador*/
 debug_*.html
 venv/
+token.txt

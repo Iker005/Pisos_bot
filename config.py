@@ -2,12 +2,18 @@
 #  CONFIGURACIÓN DEL BOT DE PISOS  (versión para GitHub)
 # ============================================================
 # ¡OJO! Este repositorio es PÚBLICO: NO escribas aquí el token de Telegram.
-# El token se guarda en GitHub como secreto (Settings → Secrets → TELEGRAM_TOKEN).
+# En GitHub está guardado como secreto (TELEGRAM_TOKEN). En el Mac se lee del
+# archivo token.txt de esta carpeta, que NUNCA se sube (está en .gitignore).
 
 import os
+from pathlib import Path
+
+EN_GITHUB = bool(os.environ.get("CI"))
 
 # --- Telegram -------------------------------------------------
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
+_token_txt = Path(__file__).with_name("token.txt")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN") or (
+    _token_txt.read_text().strip() if _token_txt.exists() else "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "-1003964340602")
 
 # --- Filtros --------------------------------------------------
@@ -46,17 +52,20 @@ EXTRAS = {
 
 # --- Búsquedas ------------------------------------------------
 # Para desactivar una web, pon # delante de su línea.
-# Idealista y Milanuncios bloquean al bot. Fotocasa y Wallapop bloquean a los
-# servidores de GitHub (error 403), así que aquí van desactivadas; desde el
-# Mac sí funcionan.
+# Idealista y Milanuncios bloquean al bot, por eso no están.
 BUSQUEDAS = [
-    # "https://www.fotocasa.es/es/alquiler/viviendas/vigo/todas-las-zonas/l?maxPrice=800&minSurface=60&sortType=publicationDate",
     "https://www.pisos.com/alquiler-residencial/pisos-vigo/desde-60-m2/hasta-800/",
     "https://www.habitaclia.com/alquiler/viviendas/pontevedra-provincia/vigo/s?maxPrice=800&minSurface=60&minRooms=1",
-    # Wallapop con la ubicación de Vigo puesta en la URL (los servidores de
-    # GitHub no están en Vigo, así que sin esto buscaría en otra ciudad).
-    # "https://es.wallapop.com/search?keywords=pisos+alquiler&latitude=42.2328&longitude=-8.7226&distance_in_km=10&order_by=newest",
 ]
+
+# Fotocasa y Wallapop bloquean a los servidores de GitHub (error 403), así
+# que solo se buscan cuando el bot se lanza desde el Mac.
+if not EN_GITHUB:
+    BUSQUEDAS += [
+        "https://www.fotocasa.es/es/alquiler/viviendas/vigo/todas-las-zonas/l?maxPrice=800&minSurface=60&sortType=publicationDate",
+        # Wallapop con la ubicación de Vigo puesta en la URL
+        "https://es.wallapop.com/search?keywords=pisos+alquiler&latitude=42.2328&longitude=-8.7226&distance_in_km=10&order_by=newest",
+    ]
 
 # --- Funcionamiento -------------------------------------------
 INTERVALO_MINUTOS = 30

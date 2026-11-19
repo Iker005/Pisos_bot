@@ -52,7 +52,7 @@ jobs:
         if: always()
         run: |
           shopt -s nullglob
-          files=(vistos*.json historico*.json)
+          files=(vistos*.txt historico*.json)
           [ ${#files[@]} -eq 0 ] && exit 0
           git config user.name "bot-pisos"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

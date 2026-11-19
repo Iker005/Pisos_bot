@@ -34,7 +34,7 @@ config = importlib.import_module(f"config_{PERFIL}" if PERFIL else "config")
 
 BASE = Path(__file__).parent
 _SUFIJO = f"_{PERFIL}" if PERFIL else ""
-ARCHIVO_VISTOS = BASE / f"vistos{_SUFIJO}.json"
+ARCHIVO_VISTOS = BASE / f"vistos{_SUFIJO}.txt"  # un piso por línea
 ARCHIVO_HISTORICO = BASE / f"historico{_SUFIJO}.json"
 PERFIL_NAVEGADOR = BASE / f"perfil_navegador{_SUFIJO}"  # uno por búsqueda, para poder lanzarlas a la vez
 
@@ -142,14 +142,20 @@ def sacar_titulo(texto: str) -> str:
 
 
 def cargar_vistos() -> set:
+    vistos = set()
     try:
-        return set(json.loads(ARCHIVO_VISTOS.read_text()))
+        vistos |= {l.strip() for l in ARCHIVO_VISTOS.read_text().splitlines() if l.strip()}
     except Exception:
-        return set()
+        pass
+    try:  # formato antiguo (vistos.json)
+        vistos |= set(json.loads(ARCHIVO_VISTOS.with_suffix(".json").read_text()))
+    except Exception:
+        pass
+    return vistos
 
 
 def guardar_vistos(vistos: set) -> None:
-    ARCHIVO_VISTOS.write_text(json.dumps(sorted(vistos)))
+    ARCHIVO_VISTOS.write_text("\n".join(sorted(vistos)) + "\n")
 
 
 # ------------------------------------------------------------------- filtros
