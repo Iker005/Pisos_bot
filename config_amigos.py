@@ -22,9 +22,21 @@ HABITACIONES_MAXIMAS = 3
 # Mientras no exista, sus pisos llegan a vuestro grupo.
 TELEGRAM_CHAT_ID = os.environ.get("AMIGOS_CHAT_ID") or TELEGRAM_CHAT_ID  # noqa: F405
 
+# --- Precio: hasta 850 € ---------------------------------------
+PRECIO_MAXIMO = 850
+PRECIO_IDEAL = 850          # por debajo de esto no sale el aviso 💸
+
+# --- Zonas: nada en Teis ----------------------------------------
+ZONAS_EXCLUIDAS = ZONAS_EXCLUIDAS + ["teis"]  # noqa: F405
+ZONAS_AVISO = {}            # el aviso de Teis ya no hace falta
+
+# Las mismas webs, con el precio de las URLs subido a 850 €.
+# (En Pisos.com la URL va hasta 900 € porque no tiene el corte de 850;
+#  el bot descarta igualmente lo que pase de 850.)
+BUSQUEDAS = [u.replace("maxPrice=800", "maxPrice=850")  # noqa: F405
+             .replace("/hasta-800/", "/hasta-900/") for u in BUSQUEDAS]  # noqa: F405
+
 # Ejemplos de otros ajustes que puedes cambiar solo para ellos
 # (quita el # para activarlos):
-# PRECIO_MAXIMO = 900
-# PRECIO_IDEAL = 800
 # METROS_MINIMOS = 70
 # ZONAS_PREFERIDAS = ["coia", "bouzas"]
