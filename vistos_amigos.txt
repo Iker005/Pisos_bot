@@ -8,6 +8,7 @@ fotocasa:191368056
 fotocasa:191415000
 fotocasa:191473395
 habitaclia:24a0fa39-3108-4aa7-9bc8-92c0ae895d56
+habitaclia:3d0b3733-cb5d-4440-98a3-800a6df12a01
 habitaclia:3dcf5b3e-f097-4c31-bde8-8fbbb1edb94d
 habitaclia:3ddc812c-b2ea-4543-ae09-1de93717f428
 habitaclia:3f60b4fd-d05f-47a0-96f5-972cfd02f3a8
@@ -18,8 +19,11 @@ habitaclia:9f3a1765-fbff-4c29-9fcc-549a097696a1
 habitaclia:c70173cf-4e4c-497e-9f08-e0b73c3a37e5
 habitaclia:cb5b2521-a0b2-44da-beba-9de9ecf79d06
 habitaclia:d8cd647f-34af-4bba-a8c7-a6352aac16aa
+habitaclia:f7ba54dc-b4ef-4db6-92ff-6e18eda56c6d
+pisos.com:61704604503_106400
 pisos.com:64171558047_109800
 pisos.com:65926762746_106400
+pisos.com:67568832068_510549
 pisos.com:69229627952_510549
 pisos.com:69255931469_100500
 wallapop:cama-y-un-colchon-pikolin-1325975234
